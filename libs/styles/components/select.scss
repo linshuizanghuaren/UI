@@ -1,0 +1,346 @@
+/**
+ * select scss
+ * author ganbowen
+ * created 2018/11/26 17:35:46
+ */
+
+$css-prefix-select: $css-prefix+'select';
+$css-prefix-option: $css-prefix+'option';
+$css-prefix-form-item: $css-prefix+'form-item';
+
+@mixin transitionAll() {
+  transition: all $transition-time $ease-in-out;
+}
+
+@mixin selectMockClass($color, $shadow) {
+  &-focused {
+    @include _borderColor($color);
+    box-shadow: $shadow;
+  }
+
+  &:hover {
+    @include _borderColor($color);
+  }
+}
+
+@mixin size($type, $height, $tagHeight) {
+  &-#{$type} {
+    .#{$css-prefix-select} {
+      .#{$css-prefix-select}-main-flex {
+        max-height: $height;
+        overflow: hidden;
+      }
+
+      &-autowarp {
+        .#{$css-prefix-select}-main-flex {
+          display: flex;
+          flex-wrap: wrap;
+          ;
+        }
+      }
+
+      &-main {
+        &-content {
+          height: $height;
+          line-height: $height;
+        }
+
+        .#{$css-prefix-select}-input {
+          height: $height;
+        }
+
+        .#{$css-prefix-select}-tag {
+          height: $tagHeight;
+          line-height: $tagHeight - 2px;
+
+          .icon {
+            width: $tagHeight - 2px;
+            height: $tagHeight - 2px;
+            line-height: $tagHeight - 2px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@mixin borderInit($borderColor, $radius) {
+  border: 1px solid $borderColor;
+  border-radius: $radius;
+  box-sizing: border-box;
+}
+
+@mixin border-left-radius($bg, $radius) {
+  background: $bg;
+  border-bottom-left-radius: $radius;
+  border-top-left-radius: $radius;
+}
+
+//最外层的盒子
+.#{$css-prefix-select} {
+  width: 100%;
+  font-size: 0;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+
+  >div {
+    position: relative;
+  }
+
+  //label
+  &-label {
+    font-size: 12px;
+    display: table-cell;
+    word-break: keep-all;
+    white-space: nowrap;
+    vertical-align: middle;
+    color: $Content;
+    padding: 0 7px;
+    text-align: center;
+  }
+
+  &-group-label {
+    font-size: 12px;
+    padding: 5px 10px;
+    color: $SubContent;
+  }
+
+  &-group {
+    width: auto;
+
+    .#{$css-prefix-select}-main {
+      display: table-cell;
+    }
+  }
+
+  &-group-fixed {
+    overflow: hidden;
+    @include borderInit($Border, 4px);
+    @include transitionAll();
+    @include selectMockClass($LightPrimary, 0 0 0 2px rgba(45, 140, 240, 0.2));
+
+    .#{$css-prefix-select} {
+      &-label {
+        border-right: 1px solid $Border;
+        @include border-left-radius($Background, 4px)
+      }
+
+      &-icon {
+        right: 0;
+      }
+
+      &-main {
+        border: 0;
+        display: table-cell;
+      }
+
+      &-disabled {
+        @include border-left-radius($Disabled, 0);
+        cursor: not-allowed;
+
+        .#{$css-prefix-select}-input {
+          @include border-left-radius($Disabled, 0)
+        }
+      }
+    }
+  }
+
+  &-multiple {
+    .#{$css-prefix-select} {
+      &-main-flex {
+        padding-left: 4px;
+        white-space: nowrap;
+      }
+
+      &-input {
+        padding-left: 4px;
+      }
+    }
+  }
+
+  &-icon {
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    width: 24px;
+    height: calc(100% - 2px);
+    border-radius: 4px;
+    background: $white;
+  }
+
+
+  //b-select-main
+  &-main {
+    box-sizing: border-box;
+    color: $Content;
+    outline: 0;
+    font-size: 12px;
+    user-select: none;
+    cursor: pointer;
+    background-color: $white;
+    overflow: hidden;
+    width: 100%;
+    @include borderInit($Border, 4px);
+    @include transitionAll();
+
+    &-flex {
+      padding-left: 8px;
+      padding-right: 24px;
+    }
+
+    &-content {
+      width: 100%;
+      box-sizing: border-box;
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+
+    &-placeholder {
+      color: $SubContent;
+    }
+
+    input::-ms-clear,
+    input::-ms-reveal,
+    input::-o-clear {
+      display: none;
+    }
+  }
+
+  &-filterabled {
+    padding-left: 4px;
+  }
+
+  &-arrow {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    margin-top: -6px;
+    color: $Sub;
+    @include transitionAll();
+  }
+
+  &-input {
+    border: 0;
+    width: 100%;
+    border-radius: 4px;
+    padding: 0;
+    @include placeholder($SubContent)
+  }
+
+  &-tag {
+    @include borderInit($Divider, 3px);
+    display: inline-block;
+    margin: 3px 4px 3px 0;
+    padding: 0 8px;
+    background: $Background;
+    vertical-align: middle;
+    overflow: hidden;
+    cursor: pointer;
+
+    .icon {
+      text-align: center;
+    }
+  }
+
+  &-disabled {
+    background: $Disabled;
+    cursor: not-allowed;
+
+    .#{$css-prefix-select}-input {
+      background: $Disabled;
+    }
+
+    +.#{$css-prefix-select}-icon {
+      background: $Disabled;
+    }
+  }
+
+  &-fixed-disabled {
+    background: $Disabled;
+    border-color: $Border !important;
+  }
+
+  //type
+  @include size(large, 34px, 28px);
+  @include size(default, 30px, 24px);
+  @include size(small, 24px, 18px);
+  //focused
+  @include selectMockClass($LightPrimary, 0 0 0 2px rgba($LightPrimary, 0.2));
+
+  .#{$css-prefix-drop} {
+    width: auto;
+  }
+
+  &-show {
+    .#{$css-prefix-select}-arrow {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.#{$css-prefix-form-item} {
+  &-error {
+
+    .#{$css-prefix-select}-main,
+    .#{$css-prefix-select}-group-fixed {
+      border-color: $Error;
+    }
+
+    .#{$css-prefix-select},
+    .#{$css-prefix-select}-group-fixed {
+      @include selectMockClass($Error, 0 0 0 2px rgba(244, 67, 54, 0.2));
+    }
+  }
+}
+
+//option
+.#{$css-prefix-option} {
+  margin: 0;
+  line-height: normal;
+  padding: 7px 16px;
+  clear: both;
+  color: $Content;
+  font-size: 12px !important;
+  white-space: nowrap;
+  list-style: none;
+  cursor: pointer;
+  @include transitionAll();
+  background: $white;
+
+  &:hover,
+  &-focus {
+    background: $Divider;
+    @include _background($Divider);
+  }
+
+  &-selected,
+  &-selected:hover {
+    @include _background($Info);
+    color: $white;
+  }
+
+  &-tip {
+    font-weight: 400;
+    font-size: 14px !important;
+    text-align: center;
+    color: $SubContent;
+  }
+
+  &-selected-multiple {
+    @include _color($Info);
+  }
+
+  .icon {
+    @include _color($Success);
+    float: right;
+  }
+
+  &-disabled {
+    @include _color($DisContent);
+    cursor: not-allowed;
+  }
+}
